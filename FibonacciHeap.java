@@ -33,7 +33,7 @@ public class FibonacciHeap {
     }
 
     public void merge() {
-        
+
     }
 
     private void resize() {
