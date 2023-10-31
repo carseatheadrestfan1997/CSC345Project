@@ -19,7 +19,9 @@ public class Node<v> {
 	}
 
 	public void addChild(Node node) {
+		node.setLeft(this.children.getLast());
 		this.children.addLast(node);
+		node.setRight(this.children.getLast());
 	}
 	
 	public void markForDeletion() {
