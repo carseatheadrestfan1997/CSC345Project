@@ -36,6 +36,12 @@ public class ArrList {
 	
 	public Node get(int i) {
 		return this.array.getVal(Math.abs(start+i)%cap);}
+
+	public Node getFirst() throws EmptyListException{
+		return this.array.getval(start);}
+
+	public Node getLast() throws EmptyListException{
+		return this.array.getval(end);}
 	
 	//resizes the array by a given factor
 	private void resize(Float factor) {
