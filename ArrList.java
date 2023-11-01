@@ -38,10 +38,10 @@ public class ArrList {
 		return this.array.getVal(Math.abs(start+i)%cap);}
 
 	public Node getFirst() throws EmptyListException{
-		return this.array.getval(start);}
+		return this.array.getVal(start);}
 
 	public Node getLast() throws EmptyListException{
-		return this.array.getval(end);}
+		return this.array.getVal(end);}
 	
 	//resizes the array by a given factor
 	private void resize(Float factor) {

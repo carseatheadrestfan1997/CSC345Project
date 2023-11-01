@@ -15,7 +15,7 @@ public class Array {
 
     //gets a String representation of the array
     public String toString() {
-	return Arrays.toString(array);
+		return Arrays.toString(array);
     }
 
     //gets the length of the array
