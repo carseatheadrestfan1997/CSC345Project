@@ -171,7 +171,7 @@ public class FibonacciHeap<T> {
 
     /**
      * gets two heaps and shoves them together.
-     * gets rid of the previous heaps while its at it
+     * gets rid of the previous heaps while it's at it
      * @param a: first heap
      * @param b: second heap
      * @return the new heap, a combination of a and b
