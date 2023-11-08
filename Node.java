@@ -10,8 +10,8 @@ public class Node<V> {
 	private boolean marked;
 	private Node<V> next;
 	private Node<V> prev;
-	private Node<V> parent = null;
-	private Node<V> child = null;
+	private Node<V> parent;
+	private Node<V> child;
 
 	public Node(V val) {
 		this.val = val;
@@ -32,8 +32,8 @@ public class Node<V> {
 		return degree;
 	}
 
-	public void setDegree(int degree) {
-		this.degree = degree;
+	public void subDegree() {
+		this.degree--;
 	}
 
 	public void addDegree() {
