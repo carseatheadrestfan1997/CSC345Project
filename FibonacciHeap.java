@@ -1,13 +1,7 @@
 import java.util.NoSuchElementException;
 
-/**
- * File: FibonacciHeap.java
- * Description: a heap of the Fibonacci variety
- */
-
 public class FibonacciHeap<T> {
 
-    // head of the heap, minimum value
     private Node<Integer> min = null;
     private int size = 0;
 
@@ -16,7 +10,6 @@ public class FibonacciHeap<T> {
 
     public Node<Integer> insert(int val) {
         Node<Integer> n = new Node<>(val);
-        // add the new node as either the head or another entry
         min = mergeLists(min, n);
         size++;
         return n;
@@ -35,72 +28,133 @@ public class FibonacciHeap<T> {
         return min;
     }
 
-    /**
-     * this algorithm looks fucked up from what i see online
-     * @return
-     */
-    public int delete_min() {
-        return 0;
+    public int extract_min() {
+        if (isEmpty()) throw new NoSuchElementException("empty heap");
+
+        Node<Integer> z = this.min;
+        Node<Integer> c = z.getChild();
+        if (c != null) {
+            Node<Integer> k = c;
+            Node<Integer> p;
+            do {
+                p = c.getNext();
+                min = mergeLists(min, c);
+                c.setParent(null);
+                c = p;
+            } while (c != null && c != k);
+        }
+        z.getPrev().setNext(z.getNext());
+        z.getNext().setPrev(z.getPrev());
+        if (z == z.getNext()) {
+            this.min = null;
+        } else {
+            this.min = z.getNext();
+            consolidate();
+        }
+        this.size--;
+        return z.getVal();
     }
 
-    /**
-     * this one too
-     */
-    public void decrease_key() {
+    public void decrease_key(Node<Integer> x, int k) {
+        if (k > x.getVal())
+            throw new IllegalArgumentException("New key is greater than current key");
 
+        x.setVal(k);
+        Node<Integer> y = x.getParent();
+        if (y != null && x.getVal() < y.getVal()) {
+            cut(x, y);
+            cascading_cut(y);
+        }
+        if (x.getVal() < min.getVal()) {
+            min = x;
+        }
     }
 
-//    /**
-//     * gets two heaps and shoves them together.
-//     * gets rid of the previous heaps while its at it
-//     * @param a: first heap
-//     * @param b: second heap
-//     * @return the new heap, a combination of a and b
-//     */
-//    public FibonacciHeap<T> merge(FibonacciHeap<T> a, FibonacciHeap<T> b) {
-//        FibonacciHeap<T> c = new FibonacciHeap<>();
-//        c.min = mergeLists(a.min, b.min);
-//        c.size = a.size + b.size;
-//
-//        a.size = b.size = 0;
-//        a.min = null;
-//        b.min = null;
-//
-//        return c;
-//    }
+    private void consolidate() {
+        int maxDegree = (int) Math.floor(Math.log(size) / Math.log(2)) + 1;
+        Node<Integer>[] degreeArray = new Node[maxDegree];
 
-    /**
-     * this function gets two pointers to the heads of two lists.
-     * using these pointers, it kinda shoves them together and returns
-     * a single pointer to the new linked list
-     * @param a: the head of the first list
-     * @param b: the head of the second list
-     * @return a pointer to the head (min value) of the new list
-     */
+        Node<Integer> currentNode = min;
+        Node<Integer> nextNode;
+        do {
+            nextNode = currentNode.getNext();
+            int degree = currentNode.getDegree();
+
+            while (degreeArray[degree] != null) {
+                Node<Integer> other = degreeArray[degree];
+                if (currentNode.getVal() > other.getVal()) {
+                    Node<Integer> temp = currentNode;
+                    currentNode = other;
+                    other = temp;
+                }
+                link(other, currentNode);
+                degreeArray[degree] = null;
+                degree++;
+            }
+            degreeArray[degree] = currentNode;
+            currentNode = nextNode;
+        } while (currentNode != min);
+
+        min = null;
+        for (int i = 0; i < maxDegree; i++) {
+            if (degreeArray[i] != null) {
+                if (min == null) {
+                    min = degreeArray[i];
+                } else {
+                    min = mergeLists(min, degreeArray[i]);
+                }
+            }
+        }
+    }
+
+    private void cut(Node<Integer> x, Node<Integer> y) {
+        // Remove node x from the child list of y.
+        x.getNext().setPrev(x.getPrev());
+        x.getPrev().setNext(x.getNext());
+        y.setChild(x);
+
+        if (y.getChild() == x) {
+            y.setChild(x.getNext());
+        }
+
+        x.setNext(x);
+        x.setPrev(x);
+        x.setParent(null);
+        x.setMarked(false);
+
+        // Decrease the degree of y.
+        y.decreaseDegree();
+
+        // Add x to the root list.
+        min = mergeLists(min, x);
+    }
+
+    private void cascading_cut(Node<Integer> y) {
+        Node<Integer> z = y.getParent();
+        if (z != null) {
+            if (!y.isMarked()) {
+                y.setMarked(true);
+            } else {
+                cut(y, z);
+                cascading_cut(z);
+            }
+        }
+    }
+
     private Node<Integer> mergeLists(Node<Integer> a, Node<Integer> b) {
-        // both lists are empty, nothing to merge. return null
         if (a == null && b == null) {
             return null;
-        }
-        // b is null, just return a
-        else if (a != null && b == null) {
+        } else if (a != null && b == null) {
             return a;
-        }
-        // a is null, just return b
-        else if (a == null) {
+        } else if (a == null) {
             return b;
-        }
-        // actually do some merging
-        else {
+        } else {
             Node<Integer> temp = a.getNext();
             a.setNext(b.getNext());
             a.getNext().setPrev(a);
             b.setNext(temp);
             b.getNext().setPrev(b);
-
-            // return the smaller of the two pointers
             return a.getVal() < b.getVal() ? a : b;
         }
     }
-
 }
