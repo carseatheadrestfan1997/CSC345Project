@@ -5,17 +5,29 @@ import java.util.NoSuchElementException;
 /**
  * File: FibonacciHeap.java
  * Description: a heap of the Fibonacci variety
- * Stores the roots of all trees in a circular doubly linked list, which is unfortunate to work with.
- * Uses two ArrayLists to keep track of the complicated deletion method.
+ * At its core, it's a bunch of min heap trees with their roots stored in a circular doubly linked list.
+ * Insertion works by just merging the value into the minimum root.
+ * Merging is a lazy method in that it puts off the more difficult operations til later, as it just concatenates
+ * both lists.
+ * Deletion of the min involves removing the min, merging the min's children into the root list, and fixing the
+ * root list such that there is only one node of each degree (degrees being Fibonacci numbers, hence the name).
+ * Decreasing the priority of a node (in this case, also its value) involves updating the node's priority.
+ * If this new priority results in invalidating heap properties, then it gets cut and set as a new root.
+ * Cutting involves:
+ *  1. the node is cut from its parent and is set as a new root.
+ *  2. if the parent wasn't a root, it gets marked.
+ *  3. if the parent was already marked, it gets recursively cut upwards.
+ *  4. continue until hitting the root or an unmarked node.
+ *  5. update the minimum node if necessary
  */
 
 public class FibonacciHeap<T> {
 
     /**
      * Internal node class used to store data.
-     * Uses a generic, but only works with integers and maybe doubles.
+     * Uses a generic, but the main class only works with integers.
      * Only stores priority, not keys.
-     * @param <V>
+     * @param <V>: integer
      */
     public static final class Node<V> {
         private int degree = 0;
