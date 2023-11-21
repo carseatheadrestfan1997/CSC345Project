@@ -5,9 +5,6 @@ This particular heap does not have separate fields for value and priority; for s
 This class has 5 public functions:
 - insert: inserts a new node by merging it into the main heap at the minimum priority element.
 - find_min: peeks the minimum value.
-- delete_min: pops the minimum value off the heap if possible and then rearranges the heap accordingly. This (and decreasing a key's priority) is where most of the complexity is, as insertion is lazy in implementation (i.e. it puts off the difficult operations til later).
-- decrease_key: decreases the priority of a key in a multi step process (increasing priority is illegal):
-  1. Checks if changing the priority will end up violating minheap properties. If so, cuts the node from its parent.
-  2. If cut, checks to see if the parent is marked to be cut. If so, recursively cuts up the heap.
-  4. Reassigns the heap's minimum value if necessary.
+- delete_min: pops the minimum value off the heap if possible and then rearranges the heap accordingly. This (and decreasing a key's priority) is where most of the complexity is, as merging (and thus insertion) is lazy in implementation (i.e. it puts off the difficult operations til later).
+- decrease_key: decreases the priority of a key and, if minheap properties are violated by that, rearranges the heap by cutting nodes.
 - merge: takes two separate Fibonacci heaps and merges them together.
