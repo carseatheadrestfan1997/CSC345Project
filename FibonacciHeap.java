@@ -11,6 +11,35 @@ import java.util.NoSuchElementException;
 
 public class FibonacciHeap<T> {
 
+    /**
+     * Internal node class used to store data.
+     * Uses a generic, but only works with integers and maybe doubles.
+     * Only stores priority, not keys.
+     * @param <V>
+     */
+    public static final class Node<V> {
+        private int degree = 0;
+        private boolean marked = false;
+        private Node<V> next;
+        private Node<V> prev;
+        private Node<V> parent;
+        private Node<V> child;
+        private V val;
+
+        private Node(V val) {
+            next = prev = this;
+            this.val = val;
+        }
+
+        public V getVal() {
+            return val;
+        }
+
+        public void setVal(V val) {
+            this.val = val;
+        }
+    }
+
     private Node<Integer> min = null;
     private int size = 0;
 
@@ -69,26 +98,26 @@ public class FibonacciHeap<T> {
 
         // first case: is this the only element? if so, just get rid of it
         // otherwise, slide it out of the way of its neighbor roots and reassign the min to whatever
-        if (min.getNext() == min) {
+        if (min.next == min) {
             min = null;
         }
         else {
-            min.getPrev().setNext(min.getNext());
-            min.getNext().setPrev(min.getPrev());
-            min.setNext(min.getNext());
+            min.prev.next = min.next;
+            min.next.prev = min.prev;
+            min = min.next;
         }
 
         // get parents out of the way since the children are going to become roots
-        if (min != null && min.getChild() != null) {
-            Node<Integer> cur = min.getChild();
+        if (min != null && min.child != null) {
+            Node<Integer> cur = min.child;
             do {
-                cur.setParent(null);
-                cur = cur.getNext();
-            } while (cur != min.getChild());
+                cur.parent = null;
+                cur = cur.next;
+            } while (cur != min.child);
         }
 
         // merge root children into list
-        min = mergeLists(min, minVal.getChild());
+        min = mergeLists(min, minVal.child);
 
         // no elements left, return
         if (min == null) return minVal;
@@ -103,49 +132,50 @@ public class FibonacciHeap<T> {
         List<Node<Integer>> treesToVisit = new ArrayList<>();
 
         // runs through the circular list til it hits the start again or til the visiting list is empty
-        for (Node<Integer> node = min;
-             treesToVisit.isEmpty() || treesToVisit.get(0) != node; node = node.getNext()) {
-            treesToVisit.add(node);
-        }
+        Node<Integer> start = min;
+        do {
+            treesToVisit.add(start);
+            start = start.next;
+        } while (start != min);
 
-        // go through the new list of trees to visit and start unionizing like it's the UPS
+        // go through the new list of trees to visit and start unioning nodes
         for (Node<Integer> node : treesToVisit) {
+            // merge until a match is found
             while (true) {
                 // make sure the tree list can hold an element of this node's degree
-                while (node.getDegree() >= trees.size()) {
+                while (node.degree >= trees.size()) {
                     trees.add(null);
                 }
 
                 // if nothing of this node's degree, set it to this node and leave
-                if (trees.get(node.getDegree()) == null) {
-                    trees.set(node.getDegree(), node);
+                if (trees.get(node.degree) == null) {
+                    trees.set(node.degree, node);
                     break;
                 }
 
                 // but if there is something of the same degree, start merging it instead
                 // also clear the slot out since it's getting modified
-                Node<Integer> t = trees.get(node.getDegree());
-                trees.set(node.getDegree(), null);
+                Node<Integer> t = trees.get(node.degree);
+                trees.set(node.degree, null);
 
                 // find out if the current node or temporary node is smaller
                 Node<Integer> min = (t.getVal() < node.getVal()) ? t : node;
-                Node<Integer> max = (t.getVal() < node.getVal()) ? t : node;
+                Node<Integer> max = (t.getVal() < node.getVal()) ? node : t;
 
                 // remove the bigger root from the circular list
-                max.getNext().setPrev(max.getPrev());
-                max.getPrev().setNext(max.getNext());
+                max.next.prev = max.prev;
+                max.prev.next = max.next;
 
                 // turn max into merging form, merge it into min
-                max.setNext(max);
-                max.setPrev(max);
-                min.setChild(mergeLists(min.getChild(), max));
+                max.next = max.prev = max;
+                min.child = mergeLists(min.child, max);
 
                 // reassign max parent since it just got merged
-                max.setParent(min);
-                max.setMarked(false);
+                max.parent = min;
+                max.marked = false;
 
                 // increment degree since max was just added
-                min.addDegree();
+                min.degree++;
 
                 // continue merging from the new min
                 node = min;
@@ -211,11 +241,11 @@ public class FibonacciHeap<T> {
         }
         // actually do some merging
         else {
-            Node<Integer> temp = a.getNext();
-            a.setNext(b.getNext());
-            a.getNext().setPrev(a);
-            b.setNext(temp);
-            b.getNext().setPrev(b);
+            Node<Integer> temp = a.next;
+            a.next = b.next;
+            a.next.prev = a;
+            b.next = temp;
+            b.next.prev = b;
 
             // return the smaller of the two pointers
             return a.getVal() < b.getVal() ? a : b;
@@ -233,7 +263,7 @@ public class FibonacciHeap<T> {
 
         // if the heap properties are violated, i.e. the node is lower priority than the parent,
         // cuts it from the parent
-        if (node.getParent() != null && node.getVal() <= node.getParent().getVal()) {
+        if (node.parent != null && node.getVal() <= node.parent.getVal()) {
             cut(node);
         }
 
@@ -249,46 +279,45 @@ public class FibonacciHeap<T> {
      * @param node: the node being cut
      */
     private void cut(Node<Integer> node) {
-        node.setMarked(false);
+        node.marked = false;
 
         // no parent to cut
-        if (node.getParent() == null) return;
+        if (node.parent == null) return;
 
         // if it has siblings, slide out of the way
-        if (node.getNext() != node) {
-            node.getNext().setPrev(node.getPrev());
-            node.getPrev().setNext(node.getNext());
+        if (node.next != node) {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
         }
 
         // if the node is its parent's child (which it usually is), make it not be
-        if (node.getParent().getChild() == node) {
+        if (node.parent.child == node) {
             // set the new child to whatever sibling if it exists
-            if (node.getNext() != node) {
-                node.getParent().setChild(node.getNext());
+            if (node.next != node) {
+                node.parent.child = node.next;
             }
             // otherwise, the child must not be an obstacle
             else {
-                node.getParent().setChild(null);
+                node.parent.child = null;
             }
         }
 
         // the child has been eliminated so the parent's degree goes down
-        node.getParent().subDegree();
+        node.parent.degree--;
 
         // turn the node into merging form and then do it into the root
-        node.setPrev(node);
-        node.setNext(node);
+        node.prev = node.next = node;
         min = mergeLists(min, node);
 
         // check for parent markings, then set as marked
-        if (node.getParent().isMarked()) {
-            cut(node.getParent());
+        if (node.parent.marked) {
+            cut(node.parent);
         }
         else {
-            node.getParent().setMarked(true);
+            node.parent.marked = true;
         }
 
         // the node's parent is now a root if everything went well, so get rid of it from the child
-        node.setParent(null);
+        node.parent = null;
     }
 }
