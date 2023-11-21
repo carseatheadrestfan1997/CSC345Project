@@ -1,7 +1,7 @@
 Fibonacci Heap
 
 A project for CSC345 which implements a Fibonacci heap in Java (an overview can be found at (https://en.wikipedia.org/wiki/Fibonacci_heap).
-This particular heap does not have separate fields for value and priority; for simplicity, it only stores integers which are simultateously value and priority.
+This heap stores key-value pairs of some arbitrary key and a double priority.
 This class has 5 public functions:
 - insert: inserts a new node by merging it into the main heap at the minimum priority element.
 - find_min: peeks the minimum value.
