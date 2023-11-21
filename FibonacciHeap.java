@@ -21,13 +21,13 @@ import java.util.NoSuchElementException;
  *  5. update the minimum node if necessary
  */
 
-public class FibonacciHeap<T> {
+public class FibonacciHeap<V> {
 
     /**
      * Internal node class used to store data.
-     * Uses a generic, but the main class only works with integers.
-     * Only stores priority, not keys.
-     * @param <V>: integer
+     * Stores a generic key value and a double priority value.
+     * Also stores a bunch of pointers so that a circular double linked list can work.
+     * @param <V>: whatever
      */
     public static final class Node<V> {
         private int degree = 0;
@@ -36,23 +36,29 @@ public class FibonacciHeap<T> {
         private Node<V> prev;
         private Node<V> parent;
         private Node<V> child;
-        private V val;
+        private V key;
+        private double priority;
 
-        private Node(V val) {
+        private Node(V key, double priority) {
             next = prev = this;
-            this.val = val;
+            this.key = key;
+            this.priority = priority;
         }
 
-        public V getVal() {
-            return val;
+        public V getKey() {
+            return this.key;
         }
 
-        public void setVal(V val) {
-            this.val = val;
+        public double getPriority() {
+            return this.priority;
+        }
+
+        public void setKey(V key) {
+            this.key = key;
         }
     }
 
-    private Node<Integer> min = null;
+    private Node<V> min = null;
     private int size = 0;
 
     /**
@@ -66,8 +72,8 @@ public class FibonacciHeap<T> {
      * @param val: the integer value, representing priority
      * @return the node which has been newly added
      */
-    public Node<Integer> insert(int val) {
-        Node<Integer> n = new Node<>(val);
+    public Node<V> insert(V val, double priority) {
+        Node<V> n = new Node<>(val, priority);
         min = mergeLists(min, n);
         size++;
         return n;
@@ -91,7 +97,7 @@ public class FibonacciHeap<T> {
      * Returns the minimum node if it exists.
      * If it doesn't, throws a NoSuchElementException.
      */
-    public Node<Integer> find_min() {
+    public Node<V> find_min() {
         if (isEmpty()) throw new NoSuchElementException("empty heap");
         return min;
     }
@@ -102,11 +108,11 @@ public class FibonacciHeap<T> {
      * Does way too much work to fix the heap afterward.
      * @return the lowest priority node in the heap.
      */
-    public Node<Integer> delete_min() {
+    public Node<V> delete_min() {
         if (isEmpty()) throw new NoSuchElementException("Empty heap");
 
         size--;
-        Node<Integer> minVal = min;
+        Node<V> minVal = min;
 
         // first case: is this the only element? if so, just get rid of it
         // otherwise, slide it out of the way of its neighbor roots and reassign the min to whatever
@@ -121,7 +127,7 @@ public class FibonacciHeap<T> {
 
         // get parents out of the way since the children are going to become roots
         if (min != null && min.child != null) {
-            Node<Integer> cur = min.child;
+            Node<V> cur = min.child;
             do {
                 cur.parent = null;
                 cur = cur.next;
@@ -137,21 +143,21 @@ public class FibonacciHeap<T> {
         // starts getting worse here
         // need to reduce all roots such that there's only one of each degree (since its a fibonacci heap)
         // uses an arraylist to keep track of things as it's easy (relative)
-        List<Node<Integer>> trees = new ArrayList<>();
+        List<Node<V>> trees = new ArrayList<>();
 
         // gotta look through whole list without messing up any traversal order
         // therefore, make sure no nodes are visited twice with another arraylist
-        List<Node<Integer>> treesToVisit = new ArrayList<>();
+        List<Node<V>> treesToVisit = new ArrayList<>();
 
         // runs through the circular list til it hits the start again or til the visiting list is empty
-        Node<Integer> start = min;
+        Node<V> start = min;
         do {
             treesToVisit.add(start);
             start = start.next;
         } while (start != min);
 
         // go through the new list of trees to visit and start unioning nodes
-        for (Node<Integer> node : treesToVisit) {
+        for (Node<V> node : treesToVisit) {
             // merge until a match is found
             while (true) {
                 // make sure the tree list can hold an element of this node's degree
@@ -167,12 +173,12 @@ public class FibonacciHeap<T> {
 
                 // but if there is something of the same degree, start merging it instead
                 // also clear the slot out since it's getting modified
-                Node<Integer> t = trees.get(node.degree);
+                Node<V> t = trees.get(node.degree);
                 trees.set(node.degree, null);
 
                 // find out if the current node or temporary node is smaller
-                Node<Integer> min = (t.getVal() < node.getVal()) ? t : node;
-                Node<Integer> max = (t.getVal() < node.getVal()) ? node : t;
+                Node<V> min = (t.priority < node.priority) ? t : node;
+                Node<V> max = (t.priority < node.priority) ? node : t;
 
                 // remove the bigger root from the circular list
                 max.next.prev = max.prev;
@@ -193,7 +199,7 @@ public class FibonacciHeap<T> {
                 node = min;
             }
             // the new min becomes whatever node is left here if need be
-            if (node.getVal() <= min.getVal()) min = node;
+            if (node.priority <= min.priority) min = node;
         }
         return minVal;
     }
@@ -202,13 +208,13 @@ public class FibonacciHeap<T> {
      * Decreases a node's value to whatever is specified. Can't set it greater than the old value.
      * This function just checks for validity, then throws the args to a helper.
      * @param node: the node to change
-     * @param val: the new priority
+     * @param priority: the new priority
      */
-    public void decrease_key(Node<Integer> node, int val) {
-        if (val > node.getVal()) {
+    public void decrease_key(Node<V> node, int priority) {
+        if (priority > node.priority) {
             throw new IllegalArgumentException("new value is bigger than old, don't do that");
         }
-        decrease_key_helper(node, val);
+        decrease_key_helper(node, priority);
     }
 
     /**
@@ -218,8 +224,8 @@ public class FibonacciHeap<T> {
      * @param b: second heap
      * @return the new heap, a combination of a and b
      */
-    public FibonacciHeap<T> merge(FibonacciHeap<T> a, FibonacciHeap<T> b) {
-        FibonacciHeap<T> c = new FibonacciHeap<>();
+    public FibonacciHeap<V> merge(FibonacciHeap<V> a, FibonacciHeap<V> b) {
+        FibonacciHeap<V> c = new FibonacciHeap<>();
         c.min = mergeLists(a.min, b.min);
         c.size = a.size + b.size;
 
@@ -238,7 +244,7 @@ public class FibonacciHeap<T> {
      * @param b: the head of the second list
      * @return a pointer to the head (min value) of the new list
      */
-    private Node<Integer> mergeLists(Node<Integer> a, Node<Integer> b) {
+    private Node<V> mergeLists(Node<V> a, Node<V> b) {
         // both lists are empty, nothing to merge. return null
         if (a == null && b == null) {
             return null;
@@ -253,14 +259,14 @@ public class FibonacciHeap<T> {
         }
         // actually do some merging
         else {
-            Node<Integer> temp = a.next;
+            Node<V> temp = a.next;
             a.next = b.next;
             a.next.prev = a;
             b.next = temp;
             b.next.prev = b;
 
             // return the smaller of the two pointers
-            return a.getVal() < b.getVal() ? a : b;
+            return a.priority < b.priority ? a : b;
         }
     }
 
@@ -268,19 +274,19 @@ public class FibonacciHeap<T> {
      * Sets the node's value to whatever is specified.
      * If it violates the heap properties, cuts it from the parent.
      * @param node: node being manipulated
-     * @param val: new value of the node
+     * @param priority: new value of the node
      */
-    private void decrease_key_helper(Node<Integer> node, int val) {
-        node.setVal(val);
+    private void decrease_key_helper(Node<V> node, double priority) {
+        node.priority = priority;
 
         // if the heap properties are violated, i.e. the node is lower priority than the parent,
         // cuts it from the parent
-        if (node.parent != null && node.getVal() <= node.parent.getVal()) {
+        if (node.parent != null && node.priority <= node.parent.priority) {
             cut(node);
         }
 
         // reassigns min if the new priority happens to be such
-        if (node.getVal() <= min.getVal()) {
+        if (node.priority <= min.priority) {
             min = node;
         }
     }
@@ -290,7 +296,7 @@ public class FibonacciHeap<T> {
      * If the parent is marked, cuts it then checks the parent's parent, and so on and so forth.
      * @param node: the node being cut
      */
-    private void cut(Node<Integer> node) {
+    private void cut(Node<V> node) {
         node.marked = false;
 
         // no parent to cut
