@@ -23,6 +23,7 @@ class RunTimeTest {
 			h.insert(i + 1, i + 1);
 		}
 		
+		System.out.println("Worst case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 100");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
@@ -36,6 +37,7 @@ class RunTimeTest {
 			h.insert((i + 1) * 2, (i + 1) * 2) ;
 		}
 		
+		System.out.println("Worst case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 100");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
@@ -49,6 +51,7 @@ class RunTimeTest {
 			h.insert(i + 1, i + 1);
 		}
 		
+		System.out.println("Worst case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 1000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
@@ -62,12 +65,29 @@ class RunTimeTest {
 			h.insert((i + 1) * 2, (i + 1) * 2) ;
 		}
 		
+		System.out.println("Worst case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 10000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
-
+	
+	@Test
+	void deleteMinAverageEx5() {
+		
+		for (int i = 0; i < 1001; i++) {
+			h.insert((i + 1), (i + 1));
+		}
+		
+		h.delete_min();
+		int cur = h.mergeCounter;
+		
+		System.out.println("Average case example:");
+		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
+		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 1000");
+		System.out.println("~~~~~~~~~~~~~~~~~~~~");
+		
+	}
 	
 	
 }

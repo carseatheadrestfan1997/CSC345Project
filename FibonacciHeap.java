@@ -70,6 +70,8 @@ public class FibonacciHeap<V> {
     public FibonacciHeap() {
     	mergeCounter = 0;
     }
+    
+    
 
     /**
      * Inserts a node into the heap by merging the heap and a new node of specified value
