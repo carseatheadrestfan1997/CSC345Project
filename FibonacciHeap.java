@@ -224,6 +224,15 @@ public class FibonacciHeap<V> {
     }
 
     /**
+     * Deletes a node by updating its priority to the minimum value and then popping off the min.
+     * @param node: node to be deleted
+     */
+    public Node<V> delete(Node<V> node) {
+        decrease_key(node, Double.NEGATIVE_INFINITY);
+        return delete_min();
+    }
+
+    /**
      * gets two heaps and shoves them together.
      * gets rid of the previous heaps while it's at it
      * @param a: first heap
