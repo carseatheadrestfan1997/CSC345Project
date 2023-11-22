@@ -273,19 +273,23 @@ class RunTimeTest {
 		
 	}
 	
+	/**
+	 * change the value of i's upper bound and max / min for different
+	 */
+	
 	@Test
 	void decreaseKeyAve1() {
 		
 		// Create a Random object to generate random numbers
 	    Random random = new Random();
 	    
-	    int max = 10000;
+	    int max = 1000000;
 	    int min = 10;
 	    
 	    
 	    
 	    // Generate 1000 random integers within the specified range
-	    for (int i = 0; i < 1000; i++) {
+	    for (int i = 0; i < 100000; i++) {
 	        int randomNumber = random.nextInt(max - min + 1) + min;
 	        h.insert(randomNumber, randomNumber);
 	    }
@@ -293,11 +297,17 @@ class RunTimeTest {
 	    h.delete_min();
 	    int dev = (h.mergeCounter + h.cutCounter);
 	    
-		h.decrease_key(h.lastNode, random.nextInt(max - min + 1) + min);
+	    int misc = 1000;
+	    
+	    while (misc >= h.lastNode.getPriority()) {
+	    	misc = random.nextInt(max - min + 1) + min;
+	    }
+	    
+		h.decrease_key(h.lastNode, misc);
 		
-		System.out.println("decrease key Best case example 1:");
+		System.out.println("decrease key Best / amortized case example 1:");
 		System.out.println("decreased to top: " + h.lastNode.getPriority());
-		System.out.println("performed " + (h.mergeCounter + h.cutCounter - dev) + " merge and cut operations on initial size 1000");
+		System.out.println("performed " + (h.mergeCounter + h.cutCounter - dev) + " merge and cut operations on initial size 100000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
