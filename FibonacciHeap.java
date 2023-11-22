@@ -63,12 +63,16 @@ public class FibonacciHeap<V> {
     
     // used for proving runtime
     public int mergeCounter;
-
+    public int cutCounter;
+    public Node<V> lastNode;
+    
     /**
      * Blank constructor
      */
     public FibonacciHeap() {
     	mergeCounter = 0;
+    	cutCounter = 0;
+    	lastNode = null;
     }
     
     
@@ -80,6 +84,7 @@ public class FibonacciHeap<V> {
      */
     public Node<V> insert(V val, double priority) {
         Node<V> n = new Node<>(val, priority);
+        lastNode = n;
         min = mergeLists(min, n);
         size++;
         return n;
@@ -304,6 +309,8 @@ public class FibonacciHeap<V> {
      * @param node: the node being cut
      */
     private void cut(Node<V> node) {
+    	cutCounter++;
+    	
         node.marked = false;
 
         // no parent to cut
