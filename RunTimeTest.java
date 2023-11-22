@@ -24,7 +24,7 @@ class RunTimeTest {
 		}
 		
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + h.mergeCounter + "merge operations on initial size 100");
+		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 100");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
@@ -37,7 +37,7 @@ class RunTimeTest {
 		}
 		
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + h.mergeCounter + "merge operations on initial size 100");
+		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 100");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
@@ -50,7 +50,7 @@ class RunTimeTest {
 		}
 		
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + h.mergeCounter + "merge operations on initial size 1000");
+		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 1000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
@@ -63,7 +63,7 @@ class RunTimeTest {
 		}
 		
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + h.mergeCounter + "merge operations on initial size 10000");
+		System.out.println("performed " + h.mergeCounter + " merge operations on initial size 10000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
