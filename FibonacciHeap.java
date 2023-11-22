@@ -210,7 +210,7 @@ public class FibonacciHeap<V> {
      * @param node: the node to change
      * @param priority: the new priority
      */
-    public void decrease_key(Node<V> node, int priority) {
+    public void decrease_key(Node<V> node, double priority) {
         if (priority > node.priority) {
             throw new IllegalArgumentException("new value is bigger than old, don't do that");
         }
