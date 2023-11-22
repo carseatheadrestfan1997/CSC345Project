@@ -199,13 +199,13 @@ import java.util.*;
 	            = dijkstraMin(
 	                V, adj, S);
 			double endTime = System.nanoTime();
-	        System.out.println((endTime - startTime));
+	        System.out.printf("java.util priority queue: %.4fms%n", ((endTime - startTime) / 1000000));
 	        startTime = System.nanoTime();
 	        int[] result2
             = dijkstraFibonacci(
                 V, adj, S);
 			endTime = System.nanoTime();
-	        System.out.println((endTime - startTime));
+	        System.out.printf("Fibonacci heap: %.4fms%n", ((endTime - startTime) / 1000000));
 	        System.out.println(Arrays.toString(result1));
 	        System.out.println(Arrays.toString(result2));
 	    }
