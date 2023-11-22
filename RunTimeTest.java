@@ -96,7 +96,7 @@ class RunTimeTest {
 	void deleteMinBestEx4() {
 		
 		for (int i = 0; i < 10001; i++) {
-			h.insert((i + 1), (i + 1));
+			h.insert((i), (i));
 		}
 		
 		h.delete_min();
@@ -104,7 +104,7 @@ class RunTimeTest {
 		
 		System.out.println("Best case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 1000");
+		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 10000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
@@ -121,7 +121,7 @@ class RunTimeTest {
 		
 		System.out.println("Best case example:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
-		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 1000");
+		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 10000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
 		
 	}
