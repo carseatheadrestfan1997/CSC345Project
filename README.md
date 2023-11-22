@@ -8,3 +8,7 @@ This class has 5 public functions:
 - delete_min: pops the minimum value off the heap if possible and then rearranges the heap accordingly. This (and decreasing a key's priority) is where most of the complexity is, as merging (and thus insertion) is lazy in implementation (i.e. it puts off the difficult operations til later).
 - decrease_key: decreases the priority of a key and, if minheap properties are violated by that, rearranges the heap by cutting nodes.
 - merge: takes two separate Fibonacci heaps and merges them together.
+
+Also included are:
+- FibonacciHeapTest: basic JUnit5 test cases for functionality.
+- DijkstrasTest: a file for examining the difference in runtime between a Fibonacci heap and a java.utils priority queue when calculating Dijkstra's algorithm.
