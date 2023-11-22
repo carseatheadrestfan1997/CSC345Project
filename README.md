@@ -12,3 +12,4 @@ This class has 5 public functions:
 Also included are:
 - FibonacciHeapTest: basic JUnit5 test cases for functionality.
 - DijkstrasTest: a file for examining the difference in runtime between a Fibonacci heap and a java.utils priority queue when calculating Dijkstra's algorithm.
+- RunTimeTest: test cases for observing Fibonacci heap runtimes
