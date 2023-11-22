@@ -279,7 +279,7 @@ public class FibonacciHeap<V> {
         }
         // actually do some merging
         else {
-        	mergeCounter++;
+//        	mergeCounter++;
             Node<V> temp = a.next;
             a.next = b.next;
             a.next.prev = a;
