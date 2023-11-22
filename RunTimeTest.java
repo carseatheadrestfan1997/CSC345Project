@@ -148,7 +148,7 @@ class RunTimeTest {
 		h.delete_min();
 		int cur = h.mergeCounter;
 		
-		System.out.println("Average case example 6:");
+		System.out.println("random number example, second delete min operation:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 1000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
@@ -175,7 +175,7 @@ class RunTimeTest {
 		// h.delete_min();
 		int cur = h.mergeCounter;
 		
-		System.out.println("Average case example 6, first delete min:");
+		System.out.println("random number insertion, first delete min:");
 		System.out.println("removed minimum priority object: " + h.delete_min().getPriority());
 		System.out.println("performed " + (h.mergeCounter - cur) + " merge operations on initial size 1000");
 		System.out.println("~~~~~~~~~~~~~~~~~~~~");
