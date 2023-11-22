@@ -3,4 +3,8 @@
 
 #ignore output
 /out
-/bin
+/bin*
+
+#eclipse stuff
+.classpath
+.project
