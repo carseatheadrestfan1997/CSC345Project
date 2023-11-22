@@ -60,11 +60,15 @@ public class FibonacciHeap<V> {
 
     private Node<V> min = null;
     private int size = 0;
+    
+    // used for proving runtime
+    public int mergeCounter;
 
     /**
      * Blank constructor
      */
     public FibonacciHeap() {
+    	mergeCounter = 0;
     }
 
     /**
@@ -259,6 +263,7 @@ public class FibonacciHeap<V> {
         }
         // actually do some merging
         else {
+        	mergeCounter++;
             Node<V> temp = a.next;
             a.next = b.next;
             a.next.prev = a;
