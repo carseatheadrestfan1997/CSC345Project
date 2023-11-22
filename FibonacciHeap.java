@@ -152,7 +152,7 @@ public class FibonacciHeap<V> {
         if (min == null) return minVal;
 
         // starts getting worse here
-        // need to reduce all roots such that there's only one of each degree (since its a fibonacci heap)
+        // need to reduce all roots such that there's only one of each degree (since it's a fibonacci heap)
         // uses an arraylist to keep track of things as it's easy (relative)
         List<Node<V>> trees = new ArrayList<>();
 
@@ -167,7 +167,7 @@ public class FibonacciHeap<V> {
             start = start.next;
         } while (start != min);
 
-        // go through the new list of trees to visit and start unioning nodes
+        // go through the new list of trees to visit and start merging nodes
         for (Node<V> node : treesToVisit) {
             // merge until a match is found
             while (true) {
