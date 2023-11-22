@@ -17,7 +17,7 @@ class RunTimeTest {
 	 */
 	
 	@Test
-	void delteMinWorstEx1() {
+	void deleteMinWorstEx1() {
 		
 		for (int i = 0; i < 100; i++) {
 			h.insert(i + 1, i + 1);
@@ -30,7 +30,7 @@ class RunTimeTest {
 	}
 	
 	@Test
-	void delteMinWorstEx2() {
+	void deleteMinWorstEx2() {
 		
 		for (int i = 0; i < 100; i++) {
 			h.insert((i + 1) * 2, (i + 1) * 2) ;
@@ -43,7 +43,7 @@ class RunTimeTest {
 	}
 	
 	@Test
-	void delteMinWorstEx3() {
+	void deleteMinWorstEx3() {
 		
 		for (int i = 0; i < 1000; i++) {
 			h.insert(i + 1, i + 1);
@@ -56,7 +56,7 @@ class RunTimeTest {
 	}
 	
 	@Test
-	void delteMinWorstEx4() {
+	void deleteMinWorstEx4() {
 		
 		for (int i = 0; i < 10000; i++) {
 			h.insert((i + 1) * 2, (i + 1) * 2) ;
