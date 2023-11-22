@@ -139,7 +139,7 @@ class RunTimeTest {
 	    Random random = new Random();
 
 	    // Generate 1000 random integers within the specified range
-	    for (int i = 0; i < 1001; i++) {
+	    for (int i = 0; i < 1000; i++) {
 	        int randomNumber = random.nextInt(max - min + 1) + min;
 	        h.insert(randomNumber, randomNumber);
 	    }
@@ -166,7 +166,7 @@ class RunTimeTest {
 	    Random random = new Random();
 
 	    // Generate 1000 random integers within the specified range
-	    for (int i = 0; i < 1001; i++) {
+	    for (int i = 0; i < 1000; i++) {
 	        int randomNumber = random.nextInt(max - min + 1) + min;
 	        h.insert(randomNumber, randomNumber);
 	    }
