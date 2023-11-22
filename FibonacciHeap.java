@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
  * both lists.
  * Deletion of the min involves removing the min, merging the min's children into the root list, and fixing the
  * root list such that there is only one node of each degree (degrees being Fibonacci numbers, hence the name).
- * Decreasing the priority of a node (in this case, also its value) involves updating the node's priority.
+ * Decreasing the priority of a node involves updating the node's priority.
  * If this new priority results in invalidating heap properties, then it gets cut and set as a new root.
  * Cutting involves:
  *  1. the node is cut from its parent and is set as a new root.
